@@ -39,6 +39,10 @@ export const dictionary = {
       aiAnalysis: "AI Analysis",
       discardButton: "Discard",
       submitButton: "Confirm & Submit",
+      noPigeonsFound: {
+        title: "No Pigeons Detected",
+        description: "The AI did not find any pigeons in this photo. Reports can only be submitted if at least one pigeon is detected."
+      }
     },
     success: {
       title: "Report Submitted!",

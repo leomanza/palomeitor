@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useTransition, useEffect, type ChangeEvent } from "react";
@@ -13,6 +14,7 @@ import {
   Hash,
   ShieldCheck,
   MailWarning,
+  Info,
 } from "lucide-react";
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { analyzePigeonPhoto, submitPigeonReport } from "@/app/actions";
@@ -38,6 +40,7 @@ import type { Dictionary } from "@/lib/i18n";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { auth } from "@/lib/firebase"; 
 import Link from "next/link";
+import type { PigeonReport } from "@/lib/types";
 
 type Stage =
   | "idle"
@@ -50,6 +53,32 @@ type Stage =
 
 interface PigeonUploaderProps {
   dict: Dictionary["pigeonUploader"];
+}
+
+const MAX_WIDTH = 800; // Max width for uploaded images
+const COMPRESSION_QUALITY = 0.7; // JPEG quality (0 to 1)
+
+async function compressImage(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = document.createElement('img');
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const scaleFactor = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleFactor;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return reject(new Error("Could not get canvas context"));
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', COMPRESSION_QUALITY));
+      };
+      img.onerror = reject;
+    };
+    reader.onerror = reject;
+  });
 }
 
 export default function PigeonUploader({ dict }: PigeonUploaderProps) {
@@ -124,6 +153,7 @@ export default function PigeonUploader({ dict }: PigeonUploaderProps) {
 
   const handleSubmit = () => {
     if (!dataUri || !user?.uid || !user?.email) return;
+    if (pigeonCount === 0) return; // Extra guard
 
     setStage("submitting");
 
@@ -277,6 +307,17 @@ export default function PigeonUploader({ dict }: PigeonUploaderProps) {
         {stage === 'confirming' && previewUrl && (
             <div className="w-full space-y-4 text-left">
                 <Image src={previewUrl} alt={dict.confirming.imageAlt} width={400} height={300} className="rounded-lg object-cover w-full aspect-[4/3]"/>
+                
+                {pigeonCount === 0 && (
+                    <Alert variant="default" className="border-yellow-500 text-yellow-700">
+                        <Info className="h-4 w-4" />
+                        <AlertTitle>{dict.confirming.noPigeonsFound.title}</AlertTitle>
+                        <AlertDescription>
+                            {dict.confirming.noPigeonsFound.description}
+                        </AlertDescription>
+                    </Alert>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="flex items-center gap-2 p-3 bg-secondary rounded-lg">
                         <Hash className="h-6 w-6 text-primary"/>
@@ -334,7 +375,7 @@ export default function PigeonUploader({ dict }: PigeonUploaderProps) {
           <Button variant="outline" onClick={reset} disabled={isLoading}>
             {dict.confirming.discardButton}
           </Button>
-          <Button onClick={handleSubmit} disabled={isLoading}>
+          <Button onClick={handleSubmit} disabled={isLoading || pigeonCount === 0}>
             {dict.confirming.submitButton}
           </Button>
         </CardFooter>

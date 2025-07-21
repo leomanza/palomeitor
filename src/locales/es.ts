@@ -39,6 +39,10 @@ export const dictionary = {
       aiAnalysis: "Análisis de IA",
       discardButton: "Descartar",
       submitButton: "Confirmar y Enviar",
+      noPigeonsFound: {
+        title: "No se Detectaron Palomas",
+        description: "La IA no encontró ninguna paloma en esta foto. Solo se pueden enviar reportes si se detecta al menos una paloma."
+      }
     },
     success: {
       title: "¡Reporte Enviado!",

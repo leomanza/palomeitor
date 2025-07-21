@@ -91,7 +91,7 @@ export default function ReportIssueDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" className="text-muted-foreground hover:text-primary gap-2">
+        <Button variant="outline" className="text-muted-foreground hover:text-white transition-colors">
             <Bug className="h-4 w-4" />
             Reportar un Problema
         </Button>
