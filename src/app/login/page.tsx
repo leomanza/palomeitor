@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signInWithEmailAndPassword, signOut, sendEmailVerification, type User } from 'firebase/auth';
+import { signInWithEmailAndPassword, signOut, sendEmailVerification, sendPasswordResetEmail, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,6 +19,17 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { ToastAction } from '@/components/ui/toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -42,6 +53,33 @@ export default function LoginPage() {
         });
     }
   }
+
+  const handlePasswordReset = async () => {
+    if (!email) {
+      toast({
+        variant: 'destructive',
+        title: 'Correo Electrónico Requerido',
+        description: 'Por favor, ingresa tu correo electrónico para restablecer la contraseña.',
+      });
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast({
+        title: 'Correo de Restablecimiento Enviado',
+        description: 'Revisa tu bandeja de entrada para ver las instrucciones para restablecer tu contraseña.',
+      });
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Error al Enviar Correo',
+        description: error.code === 'auth/user-not-found' ? 'No se encontró ninguna cuenta con ese correo.' : 'Ocurrió un error. Inténtalo de nuevo.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,7 +144,29 @@ export default function LoginPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Contraseña</Label>
+              <div className="flex items-center">
+                <Label htmlFor="password">Contraseña</Label>
+                 <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="link" type="button" className="ml-auto inline-block text-sm underline">
+                        ¿Olvidaste tu contraseña?
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Restablecer Contraseña</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
+                          Asegúrate de que el correo sea: <span className="font-bold">{email || 'tu-email@ejemplo.com'}</span>.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={handlePasswordReset}>Continuar</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+              </div>
               <Input
                 id="password"
                 type="password"
@@ -117,20 +177,6 @@ export default function LoginPage() {
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? 'Ingresando...' : 'Ingresar'}
-            </Button>
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  O continuar con
-                </span>
-              </div>
-            </div>
-            <Button variant="outline" className="w-full" type="button" disabled>
-                {/* This button is ready for Mi Argentina integration */}
-                Ingresar con Mi Argentina
             </Button>
           </CardContent>
           <CardFooter className="text-center text-sm">

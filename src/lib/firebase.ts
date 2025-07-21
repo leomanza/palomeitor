@@ -25,6 +25,8 @@ if (!getApps().length) {
 }
 
 const auth: Auth = getAuth(app);
+// Set auth language to Spanish for emails
+auth.languageCode = 'es';
 const db: Firestore = getFirestore(app);
 const storage: FirebaseStorage = getStorage(app);
 

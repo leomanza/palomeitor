@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -23,7 +24,7 @@ export type GeneratePhotoDescriptionInput = z.infer<typeof GeneratePhotoDescript
 
 const GeneratePhotoDescriptionOutputSchema = z.object({
   pigeonCount: z.number().int().describe('The exact number of pigeons visible in the photo. Output 0 if there are none.'),
-  photoDescription: z.string().describe('A descriptive summary of the pigeon photo, focusing on their location and any interesting details.'),
+  photoDescription: z.string().describe('A descriptive summary of the pigeon photo, focusing on their location and any interesting details. The description must be in Spanish.'),
   modelVersion: z.string().describe('The name of the AI model used for the analysis.'),
 });
 export type GeneratePhotoDescriptionOutput = z.infer<typeof GeneratePhotoDescriptionOutputSchema>;
@@ -45,6 +46,7 @@ const prompt = ai.definePrompt({
   2.  A descriptive summary of the photo.
 
   Focus on the number of pigeons, their location, and any interesting details for the description.
+  The description must be written in Spanish.
 
   Photo: {{media url=photoDataUri}}`,
   model: MODEL_NAME,

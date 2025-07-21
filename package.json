@@ -1,7 +1,10 @@
 {
-  "name": "nextn",
-  "version": "0.1.0",
-  "private": true,
+  "name": "palomeitor",
+  "version": "0.1.1",
+  "private": false,
+  "author": "Leandro Manzanal (@leomanzanal)",
+  "description": "Palomeitor is an app that enables citizens to report urban pigeon sightings",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev --turbopack -p 9002",
     "genkit:dev": "genkit start -- tsx src/ai/dev.ts",

@@ -70,7 +70,6 @@ export default function ProfilePage() {
     const file = event.target.files?.[0];
     if (!file || !user) return;
 
-    // Validate file type
     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
       toast({
         variant: 'destructive',
@@ -80,7 +79,6 @@ export default function ProfilePage() {
       return;
     }
 
-    // Validate file size
     if (file.size > MAX_FILE_SIZE_BYTES) {
       toast({
         variant: 'destructive',
@@ -99,17 +97,25 @@ export default function ProfilePage() {
       const result = await updateUserProfilePhoto(user.uid, dataUrl);
 
       if (result.success && result.photoUrl) {
-        await updateProfile(user, { photoURL: result.photoUrl });
-        // Manually update state to reflect change immediately
-        setUser({ ...user, photoURL: result.photoUrl });
-        toast({
-          title: 'Foto de perfil actualizada',
-          description: 'Tu nueva foto de perfil ha sido guardada.',
-        });
+        try {
+            await updateProfile(user, { photoURL: result.photoUrl });
+            // Manually update state to reflect change immediately
+            setUser(prevUser => prevUser ? { ...prevUser, photoURL: result.photoUrl } as User : null);
+            toast({
+              title: 'Foto de perfil actualizada',
+              description: 'Tu nueva foto de perfil ha sido guardada.',
+            });
+        } catch (error: any) {
+             toast({
+              variant: 'destructive',
+              title: 'Error al actualizar perfil',
+              description: error.message || 'No se pudo guardar la foto en tu perfil de Firebase.',
+            });
+        }
       } else {
         toast({
           variant: 'destructive',
-          title: 'Error al subir la imagen',
+          title: 'Error al procesar la foto',
           description: result.error || 'Ocurrió un error inesperado.',
         });
       }
@@ -143,7 +149,7 @@ export default function ProfilePage() {
   }
 
   if (!user) {
-    return null; // Or a redirect component
+    return null;
   }
   
   const getInitials = (email: string | null) => {
