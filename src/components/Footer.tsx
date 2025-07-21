@@ -12,7 +12,8 @@ export default function Footer() {
 
   return (
     <footer className="bg-card border-t shadow-sm">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6 text-sm">
+      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4 px-4 py-4 md:h-16 md:py-0 text-sm">
+        {/* Creator Info */}
         <div className="flex items-center gap-4">
           <Link href={creatorUrl} target="_blank" rel="noopener noreferrer">
             <Image
@@ -56,6 +57,7 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Actions */}
         <div className="flex items-center gap-4">
           <ReportIssueDialog />
           <a

@@ -33,7 +33,7 @@ export default function LandingPage() {
         <section id="how-it-works" className="bg-muted py-16 md:py-24">
           <div className="container mx-auto px-4">
             <div className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">¿Cómo Funciona?</h2>
+              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">¿Cómo funciona?</h2>
               <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
                 Participar es muy fácil. Sigue estos simples pasos para convertirte en un científico ciudadano.
               </p>
@@ -43,7 +43,7 @@ export default function LandingPage() {
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground mb-4">
                   <Camera className="h-8 w-8" />
                 </div>
-                <h3 className="text-xl font-semibold">1. Toma una Foto</h3>
+                <h3 className="text-xl font-semibold">1. Toma una foto</h3>
                 <p className="mt-2 text-muted-foreground">
                   Usa la app para activar tu cámara y tomar una foto de las palomas. Esto garantiza la ubicación y hora exactas del avistamiento.
                 </p>
@@ -74,7 +74,7 @@ export default function LandingPage() {
         <section className="py-16 md:py-24">
           <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-4">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight">El Porqué de Palomeitor</h2>
+              <h2 className="text-3xl font-bold tracking-tight">El por qué de Palomeitor</h2>
               <p className="mt-4 text-muted-foreground">
                 Esta aplicación fue creada como una herramienta independiente, inspirada por el proyecto de ciencia ciudadana sobre palomas urbanas lanzado por <a href="https://inbiosur.conicet.gov.ar/proyectopalomas/" target="_blank" rel="noopener noreferrer" className="font-semibold underline hover:text-primary">INBIOSUR (CONICET - UNS)</a>.
               </p>
@@ -84,7 +84,7 @@ export default function LandingPage() {
               <div className="mt-6">
                  <Button asChild variant="outline">
                     <Link href="https://inbiosur.conicet.gov.ar/proyectopalomas/" target="_blank" rel="noopener noreferrer">
-                        Conoce el Proyecto Original
+                        Conocé el Proyecto Original
                     </Link>
                 </Button>
               </div>
