@@ -91,7 +91,7 @@ export default function LandingPage() {
             </div>
             <div className="flex justify-center">
                 <Image 
-                    src="https://placehold.co/500x300.png"
+                    src="/palomas-city.png"
                     data-ai-hint="pigeons city"
                     alt="Palomas en un entorno urbano"
                     width={500}
