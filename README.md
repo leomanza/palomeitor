@@ -4,8 +4,6 @@ Palomeitor is an app that enables citizens to report urban pigeon sightings. It 
 
 This project was inspired by the urban pigeon monitoring initiative from [INBIOSUR (CONICET-UNS)](https://inbiosur.conicet.gov.ar/proyectopalomas/), and it serves as an independent, unofficial tool to facilitate similar data collection efforts.
 
-![Palomeitor App Screenshot](https://placehold.co/800x450.png)
-
 ---
 
 ## ✨ Key Features
