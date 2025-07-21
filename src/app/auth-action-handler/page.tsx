@@ -83,6 +83,7 @@ function ActionHandler() {
     e.preventDefault();
     if (!actionCode) return;
     setIsLoading(true);
+    setError(null);
 
     try {
       await confirmPasswordReset(auth, actionCode, newPassword);
@@ -91,9 +92,11 @@ function ActionHandler() {
         title: 'Contraseña Restablecida',
         description: 'Tu contraseña ha sido cambiada exitosamente.',
       });
-      setTimeout(() => router.push('/login'), 3000);
+      // Do not redirect immediately, show success message first.
+      // The user can click the button to go to login.
     } catch (err) {
       setError('Hubo un error al restablecer la contraseña. El enlace puede haber expirado.');
+    } finally {
       setIsLoading(false);
     }
   };
@@ -156,20 +159,31 @@ function ActionHandler() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Nueva Contraseña</Label>
-              <Input
-                id="password"
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-              />
+            <div className="grid gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="password">Nueva Contraseña</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    placeholder="Debe tener al menos 6 caracteres"
+                  />
+                </div>
             </div>
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full" disabled={isLoading}>
-              Guardar Nueva Contraseña
+              {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Guardando...
+                  </>
+                ) : (
+                  'Guardar Nueva Contraseña'
+                )}
             </Button>
           </CardFooter>
         </form>
@@ -180,7 +194,7 @@ function ActionHandler() {
   return null; // Fallback for unsupported modes after initial check
 }
 
-export default function ActionPage() {
+export default function AuthActionHandlerPage() {
     return (
         <div className="container mx-auto flex h-[calc(100vh-4rem)] items-center justify-center p-4">
             <Suspense fallback={
@@ -194,4 +208,3 @@ export default function ActionPage() {
         </div>
     );
 }
-

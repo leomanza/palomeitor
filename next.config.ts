@@ -24,6 +24,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/firebase-auth',
+        destination: '/auth-action-handler',
+      },
+    ]
+  },
 };
 
 export default nextConfig;
