@@ -4,9 +4,9 @@ import { Twitter, Github } from "lucide-react";
 
 export default function Footer() {
   const twitterHandle = "leomanzanal";
-  const githubRepoUrl = "https://github.com/earthdataprov/palomeitor";
+  const githubRepoUrl = "https://github.com/leomanza/palomeitor";
   const creatorName = "@leomanzanal";
-  const creatorImageUrl = "/leomanzanal.png";
+  const creatorImageUrl = "/perfil.jpg";
   const creatorUrl = "https://x.com/leomanzanal";
 
   return (
