@@ -1,17 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Twitter, Github } from "lucide-react";
+import ReportIssueDialog from "./ReportIssueDialog";
 
 export default function Footer() {
   const twitterHandle = "leomanzanal";
-  const githubRepoUrl = "https://github.com/leomanza/palomeitor";
+  const githubRepoUrl = "https://github.com/earthdataprov/palomeitor";
   const creatorName = "@leomanzanal";
   const creatorImageUrl = "/perfil.jpg";
   const creatorUrl = "https://x.com/leomanzanal";
 
   return (
     <footer className="bg-card border-t shadow-sm">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6 text-sm">
         <div className="flex items-center gap-4">
           <Link href={creatorUrl} target="_blank" rel="noopener noreferrer">
             <Image
@@ -22,7 +23,7 @@ export default function Footer() {
               className="rounded-full"
             />
           </Link>
-          <div className="text-sm">
+          <div>
             <p className="text-muted-foreground">Creado por</p>
             <a
               href={creatorUrl}
@@ -56,6 +57,7 @@ export default function Footer() {
         </div>
 
         <div className="flex items-center gap-4">
+          <ReportIssueDialog />
           <a
             href="https://cafecito.app/earthdataprovenance"
             rel="noopener noreferrer"

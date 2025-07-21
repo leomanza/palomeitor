@@ -21,6 +21,46 @@ import { Badge } from '@/components/ui/badge';
 import { updateUserProfilePhoto } from '@/app/actions';
 import { Camera, Loader2, MailCheck, MailWarning } from 'lucide-react';
 
+const MAX_WIDTH = 256; // Max width for profile pictures
+const COMPRESSION_QUALITY = 0.8; // JPEG quality
+
+async function compressProfileImage(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = document.createElement('img');
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_WIDTH) {
+            width *= MAX_WIDTH / height;
+            height = MAX_WIDTH;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return reject(new Error("Could not get canvas context"));
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', COMPRESSION_QUALITY));
+      };
+      img.onerror = reject;
+    };
+    reader.onerror = reject;
+  });
+}
+
+
 const MAX_FILE_SIZE_MB = 2;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -90,45 +130,38 @@ export default function ProfilePage() {
 
     setIsUploading(true);
 
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = async () => {
-      const dataUrl = reader.result as string;
-      const result = await updateUserProfilePhoto(user.uid, dataUrl);
+    try {
+        const compressedDataUrl = await compressProfileImage(file);
+        const result = await updateUserProfilePhoto(user.uid, compressedDataUrl);
 
-      if (result.success && result.photoUrl) {
-        try {
+        if (result.success && result.photoUrl) {
+            // Update profile on Firebase Auth client-side
             await updateProfile(user, { photoURL: result.photoUrl });
-            // Manually update state to reflect change immediately
-            setUser(prevUser => prevUser ? { ...prevUser, photoURL: result.photoUrl } as User : null);
+            
             toast({
               title: 'Foto de perfil actualizada',
               description: 'Tu nueva foto de perfil ha sido guardada.',
             });
-        } catch (error: any) {
-             toast({
+
+            // This is the key change: Refresh server components to get new photoURL
+            router.refresh();
+
+        } else {
+            toast({
               variant: 'destructive',
-              title: 'Error al actualizar perfil',
-              description: error.message || 'No se pudo guardar la foto en tu perfil de Firebase.',
+              title: 'Error al subir la imagen',
+              description: result.error || 'Ocurrió un error inesperado.',
             });
         }
-      } else {
+    } catch (error: any) {
         toast({
-          variant: 'destructive',
-          title: 'Error al procesar la foto',
-          description: result.error || 'Ocurrió un error inesperado.',
+            variant: 'destructive',
+            title: 'Error al procesar la imagen',
+            description: error.message || 'No se pudo procesar la imagen seleccionada.',
         });
-      }
-      setIsUploading(false);
-    };
-    reader.onerror = () => {
-      toast({
-        variant: 'destructive',
-        title: 'Error al leer el archivo',
-        description: 'No se pudo procesar la imagen seleccionada.',
-      });
-      setIsUploading(false);
-    };
+    } finally {
+        setIsUploading(false);
+    }
   };
 
   if (isLoading) {

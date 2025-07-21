@@ -1,14 +1,15 @@
+
 "use server";
 
 import { generatePhotoDescription } from "@/ai/flows/generate-photo-description";
 import { db, storage } from "@/lib/firebase";
 import { addDoc, collection, getDocs, query, orderBy } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
-import { updateProfile } from "firebase/auth";
-import type { PigeonReport } from "@/lib/types";
+import type { PigeonReport, ReportIssueInput } from "@/lib/types";
 import { z } from "zod";
 import { generateAlias } from "@/lib/utils";
 import { createHash } from "crypto";
+import { reportIssue as reportIssueFlow } from "@/ai/flows/report-issue";
 
 export async function analyzePigeonPhoto(photoDataUri: string) {
   try {
@@ -39,12 +40,11 @@ const ReportSchema = z.object({
 export async function submitPigeonReport(
   reportData: Omit<PigeonReport, "id" | "alias" | "photoUrl" | "photoHash"> & { photoDataUri: string }
 ) {
-  // 1. Calculate photo hash
+  // 1. Calculate photo hash from the Data URI
   const photoBuffer = Buffer.from(reportData.photoDataUri.split(",")[1], 'base64');
   const photoHash = createHash('sha256').update(photoBuffer).digest('hex');
   
-  // 2. Upload photo and get URL
-  // We use the hash as the filename to prevent duplicates and ensure integrity
+  // 2. Upload photo to Storage and get URL
   const storageRef = ref(storage, `pigeon_reports/${photoHash}.jpg`);
   let photoUrl = "";
   try {
@@ -85,7 +85,6 @@ export async function submitPigeonReport(
     return { success: true, report: newReport };
   } catch (error: any) {
     console.error("Error submitting report to Firestore:", error);
-    // Return the specific Firestore error message for better debugging
     return { success: false, error: `Failed to save report to database: ${error.message}` };
   }
 }
@@ -112,22 +111,32 @@ export async function getPigeonReports(): Promise<PigeonReportsResponse> {
     }
 }
 
-
 export async function updateUserProfilePhoto(userId: string, photoDataUrl: string) {
     if (!userId) {
         return { success: false, error: "User not authenticated." };
     }
-
     try {
-        const storageRef = ref(storage, `avatars/${userId}.png`);
-
-        // Upload new profile picture
-        const uploadResult = await uploadString(storageRef, photoDataUrl, 'data_url');
+        const storageRef = ref(storage, `avatars/${userId}.jpg`);
+        const uploadResult = await uploadString(storageRef, photoDataUrl, 'data_url', {
+            contentType: 'image/jpeg'
+        });
         const downloadURL = await getDownloadURL(uploadResult.ref);
-
+        // The updateProfile call will be done on the client
         return { success: true, photoUrl: downloadURL };
     } catch (error: any) {
         console.error("Error updating profile photo:", error);
         return { success: false, error: `Failed to update profile picture: ${error.message}` };
     }
+}
+
+export async function reportIssue(
+  data: ReportIssueInput
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const result = await reportIssueFlow(data);
+    return { success: result.success };
+  } catch (e: any) {
+    console.error('actions.ts: Error reporting issue', e);
+    return { success: false, error: e.message || 'An unknown error occurred.' };
+  }
 }
