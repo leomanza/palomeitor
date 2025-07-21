@@ -1,3 +1,4 @@
+
 export const dictionary = {
   metadata: {
     title: "Palomeitor",
@@ -24,7 +25,7 @@ export const dictionary = {
     },
     loading: {
       analyzing: "La IA está analizando tu foto...",
-      submitting: "Enviando tu reporte...",
+      submitting: "Enviando...",
     },
     previewing: {
       imageAlt: "Vista previa del avistamiento de palomas",
@@ -35,13 +36,17 @@ export const dictionary = {
       pigeonsDetected: "Palomas Detectadas",
       location: "Ubicación",
       gettingLocation: "Obteniendo ubicación...",
-      enterLocation: "Ingresar ubicación manually",
+      locationUnavailable: "No disponible",
       aiAnalysis: "Análisis de IA",
       discardButton: "Descartar",
       submitButton: "Confirmar y Enviar",
       noPigeonsFound: {
         title: "No se Detectaron Palomas",
         description: "La IA no encontró ninguna paloma en esta foto. Solo se pueden enviar reportes si se detecta al menos una paloma."
+      },
+      locationError: {
+        title: "Se Requiere Acceso a la Ubicación",
+        description: "El acceso al GPS es obligatorio. Por favor, habilita los permisos de ubicación en tu navegador y en los ajustes de tu teléfono para poder enviar un reporte."
       }
     },
     success: {
@@ -99,3 +104,5 @@ export const dictionary = {
       }
   }
 };
+
+    

@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   MailWarning,
   Info,
+  MapPinOff,
 } from "lucide-react";
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { analyzePigeonPhoto, submitPigeonReport } from "@/app/actions";
@@ -83,7 +84,6 @@ async function compressImage(file: File): Promise<string> {
 
 export default function PigeonUploader({ dict }: PigeonUploaderProps) {
   const [stage, setStage] = useState<Stage>("idle");
-  const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [dataUri, setDataUri] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -91,14 +91,12 @@ export default function PigeonUploader({ dict }: PigeonUploaderProps) {
   const [aiDescription, setAiDescription] = useState("");
   const [pigeonCount, setPigeonCount] = useState(0);
   const [modelVersion, setModelVersion] = useState("");
-  const [manualLocation, setManualLocation] = useState("");
   const [user, setUser] = useState<User | null>(null);
   const [authInitialized, setAuthInitialized] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
 
   const { toast } = useToast();
   const location = useLocation();
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
         setUser(currentUser);
@@ -118,18 +116,22 @@ export default function PigeonUploader({ dict }: PigeonUploaderProps) {
     setStage("error");
   }
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      setFile(selectedFile);
-      setPreviewUrl(URL.createObjectURL(selectedFile));
-
-      const reader = new FileReader();
-      reader.readAsDataURL(selectedFile);
-      reader.onload = () => {
-        setDataUri(reader.result as string);
-        setStage("previewing");
-      };
+        try {
+            const compressedDataUri = await compressImage(selectedFile);
+            setPreviewUrl(compressedDataUri);
+            setDataUri(compressedDataUri);
+            setStage("previewing");
+        } catch (error) {
+            console.error("Image compression failed:", error);
+            toast({
+                variant: "destructive",
+                title: "Error al procesar la imagen",
+                description: "No se pudo comprimir la imagen. Inténtalo de nuevo."
+            });
+        }
     }
   };
 
@@ -152,27 +154,14 @@ export default function PigeonUploader({ dict }: PigeonUploaderProps) {
   };
 
   const handleSubmit = () => {
-    if (!dataUri || !user?.uid || !user?.email) return;
-    if (pigeonCount === 0) return; // Extra guard
+    if (!dataUri || !user?.uid || !user?.email || !location.coordinates) return;
+    if (pigeonCount === 0) return;
 
     setStage("submitting");
 
-    const finalLocation =
-      location.coordinates
-        ? `${location.coordinates.lat.toFixed(5)}, ${location.coordinates.lng.toFixed(5)}`
-        : manualLocation;
+    const finalLocation = `${location.coordinates.lat.toFixed(5)}, ${location.coordinates.lng.toFixed(5)}`;
 
-    if (!finalLocation) {
-        toast({
-            variant: "destructive",
-            title: dict.toast.locationMissing.title,
-            description: dict.toast.locationMissing.description,
-        });
-        setStage('confirming');
-        return;
-    }
-
-    const reportData = {
+    const reportData: Omit<PigeonReport, "id" | "alias" | "photoUrl" | "photoHash"> & { photoDataUri: string } = {
       userId: user.uid,
       userEmail: user.email,
       timestamp: new Date().toISOString(),
@@ -195,14 +184,11 @@ export default function PigeonUploader({ dict }: PigeonUploaderProps) {
 
   const reset = () => {
     setStage("idle");
-    setFile(null);
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setDataUri(null);
     setAiDescription("");
     setPigeonCount(0);
     setModelVersion("");
-    setManualLocation("");
     setLastError(null);
   };
 
@@ -210,6 +196,9 @@ export default function PigeonUploader({ dict }: PigeonUploaderProps) {
   
   const canUpload = !!user && user.emailVerified;
   const isLoggedInButNotVerified = !!user && !user.emailVerified;
+  console.log("location", location)
+
+  const canSubmit = !isLoading && pigeonCount > 0 && !!location.coordinates;
 
   return (
     <Card className="w-full max-w-lg shadow-lg">
@@ -318,6 +307,16 @@ export default function PigeonUploader({ dict }: PigeonUploaderProps) {
                     </Alert>
                 )}
 
+                {location.error && (
+                     <Alert variant="destructive">
+                        <MapPinOff className="h-4 w-4" />
+                        <AlertTitle>{dict.confirming.locationError.title}</AlertTitle>
+                        <AlertDescription>
+                            {dict.confirming.locationError.description}
+                        </AlertDescription>
+                    </Alert>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="flex items-center gap-2 p-3 bg-secondary rounded-lg">
                         <Hash className="h-6 w-6 text-primary"/>
@@ -330,8 +329,8 @@ export default function PigeonUploader({ dict }: PigeonUploaderProps) {
                         <MapPin className="h-6 w-6 text-primary"/>
                         <div>
                            {location.loading && <p>{dict.confirming.gettingLocation}</p>}
-                           {location.error && <Input type="text" placeholder={dict.confirming.enterLocation} value={manualLocation} onChange={(e) => setManualLocation(e.target.value)} />}
                            {location.coordinates && <p className="font-semibold">{`${location.coordinates.lat.toFixed(4)}, ${location.coordinates.lng.toFixed(4)}`}</p>}
+                           {!location.loading && !location.coordinates && <p className="font-semibold text-destructive">{dict.confirming.locationUnavailable}</p>}
                             <p className="text-sm text-muted-foreground">{dict.confirming.location}</p>
                         </div>
                     </div>
@@ -375,8 +374,15 @@ export default function PigeonUploader({ dict }: PigeonUploaderProps) {
           <Button variant="outline" onClick={reset} disabled={isLoading}>
             {dict.confirming.discardButton}
           </Button>
-          <Button onClick={handleSubmit} disabled={isLoading || pigeonCount === 0}>
-            {dict.confirming.submitButton}
+          <Button onClick={handleSubmit} disabled={!canSubmit}>
+            {isLoading ? (
+                <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {dict.loading.submitting}
+                </>
+            ) : (
+                dict.confirming.submitButton
+            )}
           </Button>
         </CardFooter>
       )}

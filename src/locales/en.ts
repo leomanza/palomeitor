@@ -1,3 +1,4 @@
+
 export const dictionary = {
   metadata: {
     title: "Palomeitor",
@@ -24,7 +25,7 @@ export const dictionary = {
     },
     loading: {
       analyzing: "AI is analyzing your photo...",
-      submitting: "Submitting your report...",
+      submitting: "Submitting...",
     },
     previewing: {
       imageAlt: "Pigeon sighting preview",
@@ -35,13 +36,17 @@ export const dictionary = {
       pigeonsDetected: "Pigeons Detected",
       location: "Location",
       gettingLocation: "Getting location...",
-      enterLocation: "Enter location manually",
+      locationUnavailable: "Unavailable",
       aiAnalysis: "AI Analysis",
       discardButton: "Discard",
       submitButton: "Confirm & Submit",
       noPigeonsFound: {
         title: "No Pigeons Detected",
         description: "The AI did not find any pigeons in this photo. Reports can only be submitted if at least one pigeon is detected."
+      },
+      locationError: {
+        title: "Location Access Required",
+        description: "GPS access is mandatory. Please enable location permissions in your browser and phone settings to submit a report."
       }
     },
     success: {
@@ -99,3 +104,5 @@ export const dictionary = {
       }
   }
 };
+
+    
