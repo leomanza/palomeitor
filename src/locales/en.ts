@@ -1,11 +1,11 @@
 
 export const dictionary = {
   metadata: {
-    title: "Palomeitor",
+    title: "Flockia",
     description: "A citizen science app for counting pigeons and contributing to urban wildlife data.",
   },
   header: {
-    title: "Palomeitor",
+    title: "Flockia",
     home: "Home",
     report: "Report Sighting",
     reports: "Reports",
@@ -104,5 +104,3 @@ export const dictionary = {
       }
   }
 };
-
-    

@@ -1,8 +1,9 @@
-# 🕊️ Palomeitor - Citizen Science Pigeon Reporting
+# Flockia - Citizen Science Pigeon Reporting
 
-Palomeitor is an app that enables citizens to report urban pigeon sightings. It ensures that every submission is verifiable, traceable, and scientifically valuable.
+Flockia is an app that enables citizens to report urban pigeon sightings. It ensures that every submission is verifiable, traceable, and scientifically valuable.
 
 This project was inspired by the urban pigeon monitoring initiative from [INBIOSUR (CONICET-UNS)](https://inbiosur.conicet.gov.ar/proyectopalomas/), and it serves as an independent, unofficial tool to facilitate similar data collection efforts.
+
 
 ---
 

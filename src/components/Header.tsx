@@ -8,6 +8,7 @@ import AuthButton from "./AuthButton";
 import { Suspense, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
+import Image from "next/image";
 import {
   Sheet,
   SheetContent,
@@ -35,7 +36,7 @@ export default function Header({ dict }: HeaderProps) {
     <header className="bg-card border-b shadow-sm sticky top-0 z-40">
       <div className="container mx-auto flex items-center justify-between h-16 px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <Bird className="h-6 w-6 text-primary" />
+          <Image src="/flockia-logo.png" alt="Flockia logo" width={32} height={32} />
           <span className="text-lg font-bold font-headline">
             {dict.title}
           </span>

@@ -1,11 +1,11 @@
 
 export const dictionary = {
   metadata: {
-    title: "Palomeitor",
+    title: "Flockia",
     description: "Una aplicación de ciencia ciudadana para contar palomas y contribuir a los datos de vida silvestre urbana.",
   },
   header: {
-    title: "Palomeitor",
+    title: "Flockia",
     home: "Inicio",
     report: "Reportar Avistamiento",
     reports: "Reportes",
@@ -104,5 +104,3 @@ export const dictionary = {
       }
   }
 };
-
-    

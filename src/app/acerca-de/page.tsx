@@ -5,12 +5,12 @@ export default function AboutPage() {
     <div className="container mx-auto max-w-4xl p-4 md:p-8">
       <div className="flex items-center gap-3 mb-6">
         <Info className="h-8 w-8 text-primary" />
-        <h1 className="text-4xl font-bold font-headline">Acerca de Palomeitor</h1>
+        <h1 className="text-4xl font-bold font-headline">Acerca de Flockia</h1>
       </div>
 
       <div className="prose prose-lg max-w-none text-foreground">
         <p>
-          <strong>Palomeitor</strong> es una aplicación de ciencia ciudadana diseñada para hacer que el reporte de avistamientos de palomas urbanas sea rápido, fácil y accesible para todos.
+          <strong>Flockia</strong> es una aplicación de ciencia ciudadana diseñada para hacer que el reporte de avistamientos de palomas urbanas sea rápido, fácil y accesible para todos.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 border-b pb-2">Nuestra Inspiración</h2>
@@ -23,7 +23,7 @@ export default function AboutPage() {
         
         <blockquote className="border-l-4 border-primary pl-4 py-2 my-6 bg-muted">
           <p className="text-base font-medium text-foreground">
-            <strong>Nota Importante:</strong> Palomeitor es una aplicación no oficial y no tiene afiliación directa con INBIOSUR o CONICET. Es una contribución independiente a la ciencia ciudadana.
+            <strong>Nota Importante:</strong> Flockia es una aplicación no oficial y no tiene afiliación directa con INBIOSUR o CONICET. Es una contribución independiente a la ciencia ciudadana.
           </p>
         </blockquote>
 

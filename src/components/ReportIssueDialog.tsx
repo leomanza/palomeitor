@@ -102,7 +102,7 @@ export default function ReportIssueDialog() {
             <DialogHeader>
               <DialogTitle>Reportar un Problema</DialogTitle>
               <DialogDescription>
-                Ayúdanos a mejorar Palomeitor. Describe el problema que encontraste.
+                Ayúdanos a mejorar Flockia. Describe el problema que encontraste.
               </DialogDescription>
             </DialogHeader>
 

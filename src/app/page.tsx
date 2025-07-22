@@ -11,9 +11,9 @@ export default function LandingPage() {
         <section className="container mx-auto px-4 py-16 text-center md:py-24">
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-2 mb-4">
-              <Bird className="h-10 w-10 text-primary" />
+            <Image src="/flockia-logo.png" alt="Flockia logo" width={64} height={64} />
               <h1 className="text-5xl font-bold tracking-tighter sm:text-6xl md:text-7xl">
-                Palomeitor
+                Flockia
               </h1>
             </div>
             <p className="max-w-2xl text-muted-foreground md:text-xl">
@@ -74,12 +74,12 @@ export default function LandingPage() {
         <section className="py-16 md:py-24">
           <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-4">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight">El por qué de Palomeitor</h2>
+              <h2 className="text-3xl font-bold tracking-tight">El por qué de Flockia</h2>
               <p className="mt-4 text-muted-foreground">
                 Esta aplicación fue creada como una herramienta independiente, inspirada por el proyecto de ciencia ciudadana sobre palomas urbanas lanzado por <a href="https://inbiosur.conicet.gov.ar/proyectopalomas/" target="_blank" rel="noopener noreferrer" className="font-semibold underline hover:text-primary">INBIOSUR (CONICET - UNS)</a>.
               </p>
               <p className="mt-4 text-muted-foreground">
-                El objetivo es facilitar y agilizar la recolección de datos sobre la distribución y comportamiento de estas aves en el entorno urbano. Si bien <strong>Palomeitor es un proyecto no oficial y sin afiliación directa con INBIOSUR</strong>, busca apoyar el mismo espíritu de colaboración y descubrimiento científico.
+                El objetivo es facilitar y agilizar la recolección de datos sobre la distribución y comportamiento de estas aves en el entorno urbano. Si bien <strong>Flockia es un proyecto no oficial y sin afiliación directa con INBIOSUR</strong>, busca apoyar el mismo espíritu de colaboración y descubrimiento científico.
               </p>
               <div className="mt-6">
                  <Button asChild variant="outline">
