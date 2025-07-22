@@ -8,9 +8,9 @@ import RootLayoutClient from "./layout-client";
 
 export const metadata: Metadata = {
   title: "Flockia",
-  description: "A citizen science app for counting pigeons and contributing to urban wildlife data.",
+  description: "AI-powered citizen science for urban birds",
   icons: {
-    icon: "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕊️</text></svg>",
+    icon: "/flockia-logo.png"
   },
 };
 
