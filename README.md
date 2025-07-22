@@ -1,8 +1,8 @@
-# Flockia - Citizen Science Pigeon Reporting
+# Flockia - AI-powered citizen science for urban birds.
 
-Flockia is an app that enables citizens to report urban pigeon sightings. It ensures that every submission is verifiable, traceable, and scientifically valuable.
+Flockia is an app that enables citizens to report urban birds sightings. It ensures that every submission is verifiable, traceable, and scientifically valuable.
 
-This project was inspired by the urban pigeon monitoring initiative from [INBIOSUR (CONICET-UNS)](https://inbiosur.conicet.gov.ar/proyectopalomas/), and it serves as an independent, unofficial tool to facilitate similar data collection efforts.
+This project was inspired by the urban bird monitoring initiative from [INBIOSUR (CONICET-UNS)](https://inbiosur.conicet.gov.ar/proyectopalomas/), and it serves as an independent, unofficial tool to facilitate similar data collection efforts.
 
 
 ---
@@ -10,7 +10,7 @@ This project was inspired by the urban pigeon monitoring initiative from [INBIOS
 ## ✨ Key Features
 
 - **📷 Camera-Only Reporting**: Enforces the use of the device's camera for submissions, ensuring the time and location of the report are authentic.
-- **🤖 AI-Powered Analysis**: Leverages Google's Gemini model via **Genkit** to automatically count the number of pigeons in a photo and provide a descriptive summary of the scene.
+- **🤖 AI-Powered Analysis**: Leverages Google's Gemini model via **Genkit** to automatically count the number of birds in a photo and provide a descriptive summary of the scene.
 - **📈 Real-time Data Visualization**: Features a live-updating dashboard with a report table, an interactive map with heatmaps (`react-leaflet`), and a user leaderboard.
 - **🔐 Secure Authentication**: Implements a complete authentication flow with Firebase, including mandatory email verification for all users.
 - **🔍 High-Integrity Data Provenance**:
